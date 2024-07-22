@@ -3,12 +3,12 @@ entries:
   sampleapp:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-22T13:39:16.759492+09:00"
+    created: "2024-07-22T14:03:33.425797+09:00"
     description: Helm chart for sampleapp
-    digest: c6ddc1e873a41d583946b7e7deab7a927ffa9f4ef1a2e7be630afad9f1e05c1d
+    digest: 38d7f5fdb1761514bfc87bb477dcb60406020cee28b99c192b407c4095094fc2
     name: sampleapp
     type: application
     urls:
     - sampleapp-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-22T13:39:16.758927+09:00"
+generated: "2024-07-22T14:03:33.425272+09:00"
