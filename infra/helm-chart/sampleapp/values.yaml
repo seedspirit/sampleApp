@@ -1,0 +1,30 @@
+namespace: my-app
+
+projectName:
+domain:
+
+app:
+  backend:
+    image:
+      name:
+      tag: latest
+    port: 8080
+    protocol: TCP
+    database: mysql
+  frontend:
+    image:
+      name:
+      tag: latest
+    port: 80
+    protocol: TCP
+  db:
+    image:
+      name: mysql
+      tag: latest
+    port: 3306
+    protocol: TCP
+    env:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE:
+      MYSQL_USER:
+      MYSQL_PASSWORD:

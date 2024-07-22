@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.projectName | lower }}-backend-deployment
+  labels:
+    projectName: {{ .Values.projectName | lower }}
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      projectName: {{ .Values.projectName | lower }}
+      tier: backend
+  template:
+    metadata:
+      labels:
+        projectName: {{ .Values.projectName | lower }}
+        tier: backend
+    spec:
+      containers:
+        - name: {{ .Values.projectName | lower }}-backend-server
+          image: {{ .Values.app.backend.image.name }}:{{ .Values.app.backend.image.tag }}
+          ports:
+            - containerPort: {{ .Values.app.backend.port }}
+          env:
+            - name: MYSQL_HOST
+              value: {{ printf "%s-db-service" (.Values.projectName | lower) | quote }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.projectName | lower }}-backend-service
+  labels:
+    projectName: {{ .Values.projectName | lower }}
+    tier: backend
+
+spec:
+  selector:
+    projectName: {{ .Values.projectName | lower }}
+    tier: backend
+  ports:
+    - protocol: {{ .Values.app.backend.protocol }}
+      port: {{ .Values.app.backend.port }}
+      targetPort: {{ .Values.app.backend.port }}

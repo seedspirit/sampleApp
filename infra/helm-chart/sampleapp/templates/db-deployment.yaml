@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.projectName | lower }}-db
+  namespace: {{ .Values.namespace }}
+  labels:
+    projectName: {{ .Values.projectName | lower }}
+    tier: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      projectName: {{ .Values.projectName | lower }}
+      tier: db
+  template:
+    metadata:
+      labels:
+        projectName: {{ .Values.projectName | lower }}
+        tier: db
+    spec:
+      containers:
+        - name: {{ .Values.projectName | lower }}-db
+          image: {{ .Values.app.db.image.name }}:{{ .Values.app.db.image.tag }}
+          ports:
+            - containerPort: {{ .Values.app.db.port }}
+          env:
+          {{- range $name, $value := .Values.app.db.env }}
+            - name: {{ $name }}
+              value: {{ $value }}
+          {{- end }}
+          volumeMounts:
+            - name:  {{ .Values.projectName | lower }}-storage
+              mountPath: /var/lib/{{ .Values.projectName | lower }}/storage
+      volumes:
+        - name: {{ .Values.projectName | lower }}-storage
+          emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.projectName | lower }}-db-service
+spec:
+  selector:
+    projectName: {{ .Values.projectName | lower }}
+    tier: db
+  ports:
+    - protocol: {{ .Values.app.db.protocol }}
+      port: {{ .Values.app.db.port }}
+      targetPort: {{ .Values.app.db.port }}

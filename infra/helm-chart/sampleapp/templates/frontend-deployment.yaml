@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.projectName | lower }}-frontend-deployment
+  labels:
+    projectName: {{ .Values.projectName | lower }}
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      projectName: {{ .Values.projectName | lower }}
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        projectName: {{ .Values.projectName | lower }}
+        tier: frontend
+    spec:
+      containers:
+        - name: {{ .Values.projectName | lower }}-frontend
+          image: {{ .Values.app.frontend.image.name }}:{{ .Values.app.frontend.image.tag }}
+          ports:
+            - containerPort: {{ .Values.app.frontend.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.projectName | lower }}-frontend-service
+spec:
+  selector:
+    projectName: {{ .Values.projectName | lower }}
+    tier: frontend
+  ports:
+    - protocol: {{ .Values.app.frontend.protocol }}
+      port: {{ .Values.app.frontend.port }}
+      targetPort: {{ .Values.app.frontend.port }}
